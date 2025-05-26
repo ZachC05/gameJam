@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public float playerSpeed;
     public float playerRotateSpeed;
 
+    [Header("Player Sprite")]
+    public GameObject PlayerRender;
 
     [Header("Player Interacts")]
     public GameObject playerInteractBox;
@@ -52,20 +55,17 @@ public class PlayerController : MonoBehaviour
             Move(transform.forward, playerSpeed);
 
             //changes the direction the player is facing
+            RotatePlayer(playerRotateSpeed, new Vector3(0, 0, 0));
         }
         //Right Input
         if (Input.GetKey(moveRight))
         {
             Move(transform.right, playerSpeed);
-
-            //changes the direction the player is facing
         }
         //Left Input
         if (Input.GetKey(moveLeft))
         {
             Move(transform.right, -playerSpeed);
-
-            //changes the direction the player is facing
         }
         //Back Input
         if (Input.GetKey(moveBackward))
@@ -73,9 +73,14 @@ public class PlayerController : MonoBehaviour
             Move(transform.forward, -playerSpeed);
 
             //changes the direction the player is facing
+            RotatePlayer(playerRotateSpeed, new Vector3(0, 180, 0));
         }
     }
 
+    public void InteractBoxPosChange(Vector3 position)
+    {
+        playerInteractBox.transform.position += position * Time.deltaTime;
+    }
 
     //allows the player to move
     private void Move(Vector3 direction, float speed)
@@ -84,8 +89,19 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(rb.position + moveVector);
     }
 
-    private void RotateTowards(float turnspeed)
+    private void RotatePlayer(float turnspeed, Vector3 Rotation)
     {
-        t.Rotate(0, turnspeed * Time.deltaTime, 0);
+
+    }
+
+    IEnumerator rotatePlayer()
+    {
+        return null;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(playerInteractBox.transform.position, interactRadius);
     }
 }

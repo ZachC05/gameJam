@@ -9,6 +9,18 @@ public class PlayerController : MonoBehaviour
     public float playerRotateSpeed;
 
 
+    [Header("Player Interacts")]
+    public GameObject playerInteractBox;
+    public float interactRadius;
+    public LayerMask interactables;
+
+    [Header("Player Keybinds")]
+    public KeyCode moveForward;
+    public KeyCode moveBackward;
+    public KeyCode moveRight;
+    public KeyCode moveLeft;
+    public KeyCode Interact;
+
     private Rigidbody rb;
     private Transform t;
 
@@ -27,14 +39,38 @@ public class PlayerController : MonoBehaviour
         Inputs();
     }
 
+    private void FixedUpdate()
+    {
+        Physics.OverlapSphere(playerInteractBox.transform.position, interactRadius, interactables);
+    }
+
     private void Inputs()
     {
         //Forward Input
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(moveForward))
         {
             Move(transform.forward, playerSpeed);
 
+            //changes the direction the player is facing
+        }
+        //Right Input
+        if (Input.GetKey(moveRight))
+        {
+            Move(transform.right, playerSpeed);
 
+            //changes the direction the player is facing
+        }
+        //Left Input
+        if (Input.GetKey(moveLeft))
+        {
+            Move(transform.right, -playerSpeed);
+
+            //changes the direction the player is facing
+        }
+        //Back Input
+        if (Input.GetKey(moveBackward))
+        {
+            Move(transform.forward, -playerSpeed);
 
             //changes the direction the player is facing
         }

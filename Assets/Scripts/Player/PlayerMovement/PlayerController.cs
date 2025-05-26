@@ -12,10 +12,14 @@ public class PlayerController : MonoBehaviour
     [Header("Player Sprite")]
     public GameObject PlayerRender;
 
+    [Header("Player Animations")]
+    public Animator turnAnimator;
+
     [Header("Player Interacts")]
     public GameObject playerInteractBox;
     public float interactRadius;
     public LayerMask interactables;
+    public bool playerInTalk;
 
     [Header("Player Keybinds")]
     public KeyCode moveForward;
@@ -38,13 +42,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Gets the inputs
-        Inputs();
+        //Gets the inputs unless the player is talking
+        if (!playerInTalk)
+        {
+            Inputs();
+        }
+
     }
 
     private void FixedUpdate()
     {
-        Physics.OverlapSphere(playerInteractBox.transform.position, interactRadius, interactables);
+        
     }
 
     private void Inputs()
@@ -54,8 +62,7 @@ public class PlayerController : MonoBehaviour
         {
             Move(transform.forward, playerSpeed);
 
-            //changes the direction the player is facing
-            RotatePlayer(playerRotateSpeed, new Vector3(0, 0, 0));
+            turnAnimator.SetBool("facingForward", true);
         }
         //Right Input
         if (Input.GetKey(moveRight))
@@ -73,14 +80,37 @@ public class PlayerController : MonoBehaviour
             Move(transform.forward, -playerSpeed);
 
             //changes the direction the player is facing
-            RotatePlayer(playerRotateSpeed, new Vector3(0, 180, 0));
+            turnAnimator.SetBool("facingForward", false);
+        }
+
+        //interation input
+        if (Input.GetKey(Interact))
+        {
+           bool checkForInteract = Physics.CheckSphere(playerInteractBox.transform.position, interactRadius, interactables);
+            if (checkForInteract)
+            {
+                GameObject npc;
+
+
+                Collider[] hits = Physics.OverlapSphere(playerInteractBox.transform.position, interactRadius, interactables);
+
+                foreach (Collider hit in hits)
+                {
+                    npc = hit.gameObject;
+
+                    NPCInteract NPCI = npc.gameObject.GetComponent<NPCInteract>();
+
+                    NPCI.NPCTalk();
+
+                    playerInTalk = true;
+                }
+
+                
+
+            } 
         }
     }
 
-    public void InteractBoxPosChange(Vector3 position)
-    {
-        playerInteractBox.transform.position += position * Time.deltaTime;
-    }
 
     //allows the player to move
     private void Move(Vector3 direction, float speed)
@@ -88,17 +118,6 @@ public class PlayerController : MonoBehaviour
         Vector3 moveVector = direction.normalized * speed * Time.deltaTime;
         rb.MovePosition(rb.position + moveVector);
     }
-
-    private void RotatePlayer(float turnspeed, Vector3 Rotation)
-    {
-
-    }
-
-    IEnumerator rotatePlayer()
-    {
-        return null;
-    }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

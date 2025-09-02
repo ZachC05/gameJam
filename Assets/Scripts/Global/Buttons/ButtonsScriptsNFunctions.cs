@@ -29,4 +29,9 @@ public class ButtonsScriptsNFunctions : MonoBehaviour
     }
 
     //Hiiiiii hope you are having a great day :p
+    //Public void to exit the game
+    public void quitApplication()
+    {
+        Application.Quit();
+    }
 }

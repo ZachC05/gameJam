@@ -27,4 +27,10 @@ public class ButtonsScriptsNFunctions : MonoBehaviour
         uiTextAnimator.SetBool("IsTalking", false);
 
     }
+
+    //Public void to exit the game
+    public void quitApplication()
+    {
+        Application.Quit();
+    }
 }

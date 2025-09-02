@@ -27,4 +27,6 @@ public class ButtonsScriptsNFunctions : MonoBehaviour
         uiTextAnimator.SetBool("IsTalking", false);
 
     }
+
+    //Hiiiiii hope you are having a great day :p
 }
